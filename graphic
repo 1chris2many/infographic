@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Report: The State of Generative AI 2025</title>
+    <!-- Chosen Palette: Calm Neutrals & Soft Accents -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard, not a linear report. It starts with high-level KPIs for quick executive summary (The Big Picture). It then flows into deeper, interactive sections: 'Market Dynamics' for exploring growth, 'Competitive Arena' for a detailed, clickable breakdown of key players (the core interactive element), 'Industry Headwinds' for a visual summary of challenges, and 'The Next Frontier' for future trends. This structure allows users to either get a quick overview or dive deep into specific areas of interest, which is more effective for a busy audience than a long-scroll document. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Market Size Forecasts -> Goal: Show Change -> Viz: Line Chart (Chart.js) -> Interaction: Hover for details -> Justification: Best for showing rapid growth over time.
+        - Report Info: Market Share by Component -> Goal: Compare Proportions -> Viz: Donut Chart (Chart.js) -> Interaction: Hover -> Justification: Clear, simple part-to-whole comparison.
+        - Report Info: Competitive Player Details (Tables 2 & 3) -> Goal: Organize & Compare -> Viz: Interactive Cards (HTML/CSS/JS) + Radar Chart (Chart.js) -> Interaction: Click player to show details & update radar chart -> Justification: Transforms static tables into an engaging, explorable deep-dive. This is the core interactive feature, allowing users to compare players on their own terms.
+        - Report Info: Industry Constraints -> Goal: Inform/Organize -> Viz: Styled 3-Column Layout with Icons (HTML/Tailwind) -> Interaction: None -> Justification: Visually breaks down complex text into scannable, thematic categories.
+        - Report Info: Shift to Agentic AI -> Goal: Show Process -> Viz: Flow Diagram (HTML/Tailwind) -> Interaction: None -> Justification: Simple visual representation of a key strategic trend without using prohibited SVG/Mermaid.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F9FA;
+            color: #343A40;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #E9ECEF;
+            color: #003049;
+        }
+        .player-logo {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent;
+        }
+        .player-logo:hover, .player-logo.active {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-color: #0077B6;
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #FFFFFF;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #E9ECEF;
+            min-height: 120px;
+        }
+        .flow-arrow::after {
+            content: '→';
+            font-size: 2rem;
+            color: #ADB5BD;
+            margin: 0 1rem;
+        }
+        @media (max-width: 767px) {
+            .flow-arrow::after {
+                content: '↓';
+                margin: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sticky top-0 bg-white/80 backdrop-blur-lg z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-center h-16">
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <a href="#overview" class="nav-link">Overview</a>
+                    <a href="#market" class="nav-link">Market</a>
+                    <a href="#players" class="nav-link">Players</a>
+                    <a href="#headwinds" class="nav-link">Headwinds</a>
+                    <a href="#frontier" class="nav-link">Frontier</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-8">
+        
+        <section id="overview" class="text-center py-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[#003049] tracking-tight">The State of Generative AI: 2025</h1>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600">An interactive analysis of the market consolidation, enterprise pragmatism, and strategic shifts defining the next era of artificial intelligence.</p>
+            
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-[#0077B6]">
+                    <p class="text-4xl font-bold text-[#003049]">$1T+</p>
+                    <p class="mt-2 text-gray-500">Projected Market by Early 2030s</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-[#00B4D8]">
+                    <p class="text-4xl font-bold text-[#003049]">>40%</p>
+                    <p class="mt-2 text-gray-500">Consensus CAGR Over Next Decade</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-[#ADE8F4]">
+                    <p class="text-4xl font-bold text-[#003049]">$4.4T</p>
+                    <p class="mt-2 text-gray-500">Potential Annual Global Productivity Value</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="my-12 border-t border-gray-200"></div>
+
+        <section id="market" class="py-12">
+            <h2 class="text-3xl font-bold text-center text-[#003049]">Market Dynamics: A Tale of Hyper-Growth</h2>
+            <p class="mt-4 text-center max-w-3xl mx-auto text-gray-600">The GenAI market is expanding at a historic pace. While estimates vary, all forecasts point to a fundamental reshaping of the global economy, driven by unprecedented enterprise and consumer demand.</p>
+            
+            <div class="mt-12 grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
+                <div class="lg:col-span-3 bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-center mb-4">Market Size Forecast (2024-2034)</h3>
+                    <div class="chart-container">
+                        <canvas id="marketForecastChart"></canvas>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 space-y-8">
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-semibold text-center mb-4">Value Chain Breakdown (2025)</h3>
+                        <div class="chart-container h-64 max-h-64">
+                            <canvas id="componentChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-semibold text-center mb-4">Fastest Growing Modality</h3>
+                         <div class="text-center">
+                             <p class="text-6xl font-extrabold text-[#0077B6]">53%</p>
+                             <p class="text-lg font-semibold mt-2">CAGR for Code Generation</p>
+                             <p class="mt-2 text-sm text-gray-500">Immediate and measurable ROI for software development makes it the easiest investment for enterprises to justify.</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="my-12 border-t border-gray-200"></div>
+
+        <section id="players" class="py-12">
+            <h2 class="text-3xl font-bold text-center text-[#003049]">The Competitive Arena</h2>
+            <p class="mt-4 text-center max-w-3xl mx-auto text-gray-600">The landscape is a complex interplay of titans, champions, and disruptors. Click on a player to explore their strategy, offerings, and benchmark performance.</p>
+
+            <div class="mt-12 p-4 bg-gray-100 rounded-xl">
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-9 gap-4 text-center">
+                    <img src="https://placehold.co/100x50/003049/FFFFFF?text=OpenAI" alt="OpenAI" class="player-logo rounded-lg bg-white p-2" data-player="openai">
+                    <img src="https://placehold.co/100x50/0077B6/FFFFFF?text=Google" alt="Google" class="player-logo rounded-lg bg-white p-2" data-player="google">
+                    <img src="https://placehold.co/100x50/00B4D8/FFFFFF?text=Anthropic" alt="Anthropic" class="player-logo rounded-lg bg-white p-2" data-player="anthropic">
+                    <img src="https://placehold.co/100x50/6c757d/FFFFFF?text=Meta" alt="Meta" class="player-logo rounded-lg bg-white p-2" data-player="meta">
+                    <img src="https://placehold.co/100x50/6c757d/FFFFFF?text=Mistral" alt="Mistral" class="player-logo rounded-lg bg-white p-2" data-player="mistral">
+                    <img src="https://placehold.co/100x50/6c757d/FFFFFF?text=Amazon" alt="Amazon" class="player-logo rounded-lg bg-white p-2" data-player="amazon">
+                    <img src="https://placehold.co/100x50/6c757d/FFFFFF?text=Cohere" alt="Cohere" class="player-logo rounded-lg bg-white p-2" data-player="cohere">
+                    <img src="https://placehold.co/100x50/6c757d/FFFFFF?text=Perplexity" alt="Perplexity" class="player-logo rounded-lg bg-white p-2" data-player="perplexity">
+                    <img src="https://placehold.co/100x50/6c757d/FFFFFF?text=DeepSeek" alt="DeepSeek" class="player-logo rounded-lg bg-white p-2" data-player="deepseek">
+                </div>
+            </div>
+
+            <div id="player-details-container" class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div id="player-info" class="bg-white p-8 rounded-xl shadow-lg min-h-[450px]">
+                    <!-- Player details will be injected here -->
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-center mb-4">Frontier Model Benchmark Comparison</h3>
+                    <div class="chart-container h-[400px] max-h-[400px]">
+                        <canvas id="benchmarkRadarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="my-12 border-t border-gray-200"></div>
+
+        <section id="headwinds" class="py-12">
+            <h2 class="text-3xl font-bold text-center text-[#003049]">Industry Headwinds: The Reality Check</h2>
+            <p class="mt-4 text-center max-w-3xl mx-auto text-gray-600">GenAI has entered Gartner's "Trough of Disillusionment." Navigating technical hurdles, economic realities, and a complex legal gauntlet is now the primary challenge for enterprises.</p>
+
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-400">
+                    <h3 class="text-xl font-bold text-red-800 flex items-center"><span class="text-2xl mr-2">⚙️</span>Technical & Operational</h3>
+                    <ul class="mt-4 list-disc list-inside space-y-2 text-gray-700">
+                        <li><b>Hallucinations & Bias:</b> Undermines trust and requires costly human oversight.</li>
+                        <li><b>Security & Privacy:</b> New attack vectors like prompt injection and risks of data leakage.</li>
+                        <li><b>Cost & Complexity:</b> Prohibitive GPU and power costs concentrate power with incumbents.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-yellow-400">
+                    <h3 class="text-xl font-bold text-yellow-800 flex items-center"><span class="text-2xl mr-2">📉</span>Economic Realities</h3>
+                    <ul class="mt-4 list-disc list-inside space-y-2 text-gray-700">
+                        <li><b>The ROI Paradox:</b> High investment, yet <30% CEO satisfaction with returns.</li>
+                        <li><b>High Failure Rates:</b> 30-40% of PoC projects are abandoned before production.</li>
+                        <li><b>Talent War:</b> Critical shortage of experienced MLOps engineers slows deployment.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-400">
+                    <h3 class="text-xl font-bold text-blue-800 flex items-center"><span class="text-2xl mr-2">⚖️</span>Regulatory & Legal</h3>
+                    <ul class="mt-4 list-disc list-inside space-y-2 text-gray-700">
+                        <li><b>Global Divergence:</b> Fragmented rules (e.g., EU AI Act vs. US approach) create compliance complexity.</li>
+                        <li><b>The Copyright Crisis:</b> Unresolved lawsuits over training data pose existential financial risk.</li>
+                        <li><b>Compliance as Strategy:</b> Governance is no longer an afterthought but a core product challenge.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="my-12 border-t border-gray-200"></div>
+
+        <section id="frontier" class="py-12">
+            <h2 class="text-3xl font-bold text-center text-[#003049]">The Next Frontier: From Augmentation to Automation</h2>
+            <p class="mt-4 text-center max-w-3xl mx-auto text-gray-600">The industry's focus is evolving. The next wave of value will come from autonomous systems that can execute complex workflows and specialized models tailored for specific industries.</p>
+            
+            <div class="mt-12">
+                <h3 class="text-2xl font-semibold text-center mb-6">The Shift to Agentic AI</h3>
+                <div class="flex flex-col md:flex-row justify-center items-stretch gap-4">
+                    <div class="flow-step flex-1">
+                        <div>
+                            <p class="text-xl font-bold">Conversational Assistant</p>
+                            <p class="text-gray-500">Augments human tasks</p>
+                        </div>
+                    </div>
+                    <div class="flow-arrow hidden md:flex items-center"></div>
+                    <div class="flow-arrow flex md:hidden items-center justify-center"></div>
+                    <div class="flow-step flex-1">
+                         <div>
+                            <p class="text-xl font-bold">Tool-Using Model</p>
+                            <p class="text-gray-500">Uses external apps & data</p>
+                        </div>
+                    </div>
+                    <div class="flow-arrow hidden md:flex items-center"></div>
+                    <div class="flow-arrow flex md:hidden items-center justify-center"></div>
+                    <div class="flow-step flex-1 bg-[#E9ECEF] border-[#ADB5BD]">
+                         <div>
+                            <p class="text-xl font-bold text-[#003049]">Autonomous Agent</p>
+                            <p class="text-gray-600">Executes end-to-end workflows</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-2xl font-semibold text-center mb-6">Strategic Recommendations for Decision-Makers</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                    <div>
+                        <p class="font-bold text-lg text-[#0077B6]">1. Adopt a Portfolio Approach</p>
+                        <p class="mt-2 text-gray-600">The "best" model is obsolete. Select the right tool for each job based on performance, cost, and risk. A single-vendor strategy is a high-risk strategy.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-lg text-[#0077B6]">2. Prioritize Data & Workflow Integration</p>
+                        <p class="mt-2 text-gray-600">Your durable competitive advantage is not the model, but how it's integrated with your proprietary data and core business processes. Invest in your data foundation.</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-lg text-[#0077B6]">3. Elevate Governance to a Strategic Function</p>
+                        <p class="mt-2 text-gray-600">Treat AI risk like cybersecurity or financial risk. Establish a cross-functional governance board and proactively prepare for emerging global regulations.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center py-8 bg-gray-100 mt-12">
+        <p class="text-gray-500">Interactive report based on "The State of Generative AI 2025."</p>
+        <p class="text-sm text-gray-400 mt-2">Data synthesized from sources including Gartner, McKinsey, Forrester, and others.</p>
+    </footer>
+
+    <script>
+        const playerLogos = document.querySelectorAll('.player-logo');
+        const playerInfoContainer = document.getElementById('player-info');
+        
+        const palette = {
+            blue1: '#003049',
+            blue2: '#0077B6',
+            blue3: '#00B4D8',
+            blue4: '#ADE8F4',
+            gray1: '#6c757d',
+            gray2: '#ced4da'
+        };
+
+        const playerData = {
+            openai: {
+                name: 'OpenAI',
+                color: palette.blue1,
+                tagline: 'First-Mover with AGI Focus',
+                model: 'GPT-4.5, o-series (o3, o4)',
+                strategy: 'Leverages first-mover advantage with a direct-to-consumer and developer model, aiming to build the most powerful, general-purpose AI systems. Deep partnership with Microsoft is critical for capital and distribution.',
+                monetization: 'Freemium model for ChatGPT, with tiered subscriptions (Plus, Pro, Team) and a major, growing revenue stream from API access for enterprises.',
+                benchmarks: { mmlu: 90, gpqa: 88, math: 85, swe: 95 }
+            },
+            google: {
+                name: 'Google',
+                color: palette.blue2,
+                tagline: 'Deep Ecosystem Integration',
+                model: 'Gemini 2.5 Pro',
+                strategy: 'Embeds Gemini models across its formidable product moats (Search, Workspace, Cloud) to reach billions of users. Leverages custom TPU hardware for efficiency.',
+                monetization: 'A strategic challenge. Experimenting with ads in AI-powered Search, while charging premium subscriptions for AI features in Workspace and Cloud (Vertex AI).',
+                benchmarks: { mmlu: 95, gpqa: 95, math: 90, swe: 64 }
+            },
+            anthropic: {
+                name: 'Anthropic',
+                color: palette.blue3,
+                tagline: 'The Safe, Enterprise-Focused Alternative',
+                model: 'Claude Opus 4.1',
+                strategy: 'Positions itself as the reliable choice for enterprises, prioritizing AI safety research and control. Go-to-market relies on deep partnerships with AWS and Google Cloud.',
+                monetization: 'Revenue is dominated (70-75%) by pay-per-token API calls. Strong product-market fit in regulated industries like finance and legal due to its large context windows and safety focus.',
+                 benchmarks: { mmlu: 88, gpqa: 85, math: 80, swe: 94 }
+            },
+            meta: {
+                name: 'Meta',
+                color: palette.gray1,
+                tagline: 'Commoditizing Models via Open Source',
+                model: 'Llama 4',
+                strategy: 'A classic platform play. By releasing powerful models for free, Meta prevents competitors from establishing a proprietary tollbooth, shifting the battle to applications where its social platforms have a massive advantage.',
+                monetization: 'Entirely indirect. Does not charge for Llama. Uses models to enhance user engagement and improve its core advertising systems, which drive all revenue.',
+                benchmarks: { mmlu: 74, gpqa: 60, math: 55, swe: 49 }
+            },
+            mistral: {
+                name: 'Mistral AI',
+                color: palette.gray1,
+                tagline: 'Europe\'s AI Champion',
+                model: 'Mistral Large 2, Devstral',
+                strategy: 'A hybrid open-and-closed strategy. Positions itself as a sovereign European alternative to US tech giants, attracting enterprises and governments concerned with data privacy.',
+                monetization: 'Diversified model: consumer subscriptions ("Le Chat Pro"), usage-based API licensing for premium models, and high-margin enterprise consulting.',
+                benchmarks: { mmlu: 84, gpqa: 75, math: 78, swe: 80 }
+            },
+            amazon: {
+                name: 'Amazon (AWS)',
+                color: palette.gray1,
+                tagline: 'The "Switzerland of AI"',
+                model: 'Amazon Nova / Bedrock Platform',
+                strategy: 'Leverages its dominant cloud position to offer the broadest selection of models and tools (via Bedrock), aiming to be the default platform for building AI applications, regardless of the underlying model.',
+                monetization: 'Consumption-based fees for AWS compute, storage, and networking, plus fees for model access through the Bedrock marketplace. New ad revenue stream via Alexa+.',
+                benchmarks: { mmlu: 70, gpqa: 70, math: 65, swe: 60 }
+            },
+            cohere: {
+                name: 'Cohere',
+                color: palette.gray1,
+                tagline: 'Secure & Private AI for the Enterprise',
+                model: 'Command A, Embed, Rerank',
+                strategy: 'Highly focused on becoming the leading private AI platform. Avoids consumer hype to build trust with large organizations, offering on-premises and VPC deployment options.',
+                monetization: 'Almost exclusively from enterprise contracts and API usage. High customer retention (95%) in regulated industries is a key success indicator.',
+                benchmarks: { mmlu: 75, gpqa: 72, math: 70, swe: 75 }
+            },
+            perplexity: {
+                name: 'Perplexity AI',
+                color: palette.gray1,
+                tagline: 'The "Answer Engine" Disruptor',
+                model: 'N/A (Uses other models)',
+                strategy: 'A direct challenger to Google Search, providing direct, synthesized answers with citations. Value proposition is built on accuracy, transparency, and an ad-free experience.',
+                monetization: 'Freemium model with a Pro subscription. Innovating with a publisher revenue-sharing program to build partnerships with content creators.',
+                benchmarks: { mmlu: 80, gpqa: 80, math: 75, swe: 70 }
+            },
+            deepseek: {
+                name: 'DeepSeek',
+                color: palette.gray1,
+                tagline: 'Cost-Efficiency & Performance Leadership',
+                model: 'DeepSeek-V3, R1',
+                strategy: 'A major disruptive force from China, releasing high-performance open-source models at a fraction of the training cost of Western counterparts, exerting deflationary pressure on the market.',
+                monetization: 'Primarily through highly competitive, token-based API services. Models are now available on all major US cloud marketplaces, a key validation of its success.',
+                benchmarks: { mmlu: 72, gpqa: 80, math: 71, swe: 64 }
+            }
+        };
+
+        const tooltipTitleCallback = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+
+        const marketForecastCtx = document.getElementById('marketForecastChart').getContext('2d');
+        const marketForecastChart = new Chart(marketForecastCtx, {
+            type: 'line',
+            data: {
+                labels: ['2024', '2025', '2027', '2029', '2030', '2032', '2034'],
+                datasets: [{
+                    label: 'Market Size (USD Billion)',
+                    data: [67, 71, 158, 350, 500, 890, 1005],
+                    borderColor: palette.blue2,
+                    backgroundColor: 'rgba(0, 119, 182, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: palette.blue1,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } },
+                ...tooltipTitleCallback
+            }
+        });
+
+        const componentCtx = document.getElementById('componentChart').getContext('2d');
+        const componentChart = new Chart(componentCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Software (Models, Apps)', 'Services (Consulting, Integration)'],
+                datasets: [{
+                    data: [65, 35],
+                    backgroundColor: [palette.blue3, palette.gray2],
+                    borderColor: '#FFFFFF',
+                    borderWidth: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    ...tooltipTitleCallback.plugins
+                }
+            }
+        });
+
+        const radarCtx = document.getElementById('benchmarkRadarChart').getContext('2d');
+        const benchmarkRadarChart = new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['General Knowledge (MMLU)', 'Graduate Reasoning (GPQA)', 'Math Problem Solving', 'Agentic Coding (SWE-Bench)'],
+                datasets: []
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { display: false },
+                        suggestedMin: 40,
+                        suggestedMax: 100,
+                        pointLabels: { font: { size: 11 } }
+                    }
+                },
+                ...tooltipTitleCallback
+            }
+        });
+
+        function updatePlayerInfo(playerKey) {
+            const data = playerData[playerKey];
+            if (!data) return;
+
+            playerInfoContainer.innerHTML = `
+                <h3 class="text-2xl font-bold" style="color: ${data.color};">${data.name}</h3>
+                <p class="text-lg font-semibold text-gray-500">${data.tagline}</p>
+                <div class="my-4 border-t border-gray-200"></div>
+                <p class="font-semibold">Flagship Model(s): <span class="font-normal text-gray-700">${data.model}</span></p>
+                <div class="mt-4">
+                    <p class="font-semibold">Strategy:</p>
+                    <p class="text-gray-700">${data.strategy}</p>
+                </div>
+                <div class="mt-4">
+                    <p class="font-semibold">Monetization:</p>
+                    <p class="text-gray-700">${data.monetization}</p>
+                </div>
+            `;
+            
+            playerLogos.forEach(logo => {
+                logo.classList.remove('active');
+                if (logo.dataset.player === playerKey) {
+                    logo.classList.add('active');
+                }
+            });
+        }
+
+        function updateRadarChart(playerKey) {
+            const data = playerData[playerKey];
+            if (!data) return;
+
+            benchmarkRadarChart.data.datasets = [{
+                label: data.name,
+                data: [data.benchmarks.mmlu, data.benchmarks.gpqa, data.benchmarks.math, data.benchmarks.swe],
+                borderColor: data.color,
+                backgroundColor: `${data.color}33`, // Add alpha transparency
+                pointBackgroundColor: data.color,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: data.color
+            }];
+            benchmarkRadarChart.update();
+        }
+
+        playerLogos.forEach(logo => {
+            logo.addEventListener('click', () => {
+                const playerKey = logo.dataset.player;
+                updatePlayerInfo(playerKey);
+                updateRadarChart(playerKey);
+            });
+        });
+
+        // Initial load
+        const initialPlayer = 'openai';
+        updatePlayerInfo(initialPlayer);
+        updateRadarChart(initialPlayer);
+        document.querySelector(`[data-player="${initialPlayer}"]`).classList.add('active');
+
+        // Nav smooth scroll highlighting
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        window.onscroll = () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 80) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        };
+
+    </script>
+</body>
+</html>
